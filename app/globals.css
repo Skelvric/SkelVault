@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.6%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.6%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 9%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --ring: 0 0% 3.6%;
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Smooth Transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Selection Color */
+::selection {
+  @apply bg-primary text-primary-foreground;
+}
+
+/* Input PlaceHolder */
+input::placeholder,
+textarea::placeholder {
+  @apply text-muted-foreground;
+}
+
+/* Focus Ring */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+}
+
+/* Avatar Styles */
+.avatar {
+  @apply w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center;
+}
+
+.avatar-xl {
+  @apply w-32 h-32 rounded-full overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center;
+}
