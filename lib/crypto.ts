@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY!;
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
 
 function getEncryptionKey() {
   return crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
