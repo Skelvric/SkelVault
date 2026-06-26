@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import { getPasswordsCollection } from '@/lib/mongodb';
@@ -19,9 +21,9 @@ function getUserIdFromToken(request: NextRequest): string | null {
 }
 
 type Context = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function GET(
@@ -34,14 +36,16 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const collection = await getPasswordsCollection();
 
-    if (!ObjectId.isValid(params.id)) {
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json({ error: 'Invalid ID!' }, { status: 400 });
     }
 
     const password = await collection.findOne({
-      _id: new ObjectId(params.id),
+      _id: new ObjectId(id),
       userId,
     });
 
@@ -71,7 +75,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
+
     const body = await request.json();
     const collection = await getPasswordsCollection();
 
@@ -124,7 +129,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
+
     const collection = await getPasswordsCollection();
 
     if (!ObjectId.isValid(id)) {
