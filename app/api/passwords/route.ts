@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getPasswordsCollection } from '@/lib/mongodb';
 import { encryptPassword, decryptPassword } from '@/lib/crypto';
