@@ -18,9 +18,15 @@ function getUserIdFromToken(request: NextRequest): string | null {
   }
 }
 
+type Context = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: Context
 ) {
   try {
     const userId = getUserIdFromToken(request);
@@ -48,6 +54,7 @@ export async function GET(
       _id: password._id.toString(),
       password: decryptPassword(password.password),
     });
+
   } catch (error) {
     console.error('GET /api/passwords/[id] error:', error);
     return NextResponse.json({ error: 'Failed to fetch!' }, { status: 500 });
@@ -56,17 +63,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: Context
 ) {
   try {
-    const { params } = context;
-    const { id } = await params;
-
     const userId = getUserIdFromToken(request);
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 });
     }
 
+    const { id } = params;
     const body = await request.json();
     const collection = await getPasswordsCollection();
 
@@ -111,17 +116,15 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: Context
 ) {
   try {
-    const { params } = context;
-    const { id } = await params;
-
     const userId = getUserIdFromToken(request);
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 });
     }
 
+    const { id } = params;
     const collection = await getPasswordsCollection();
 
     if (!ObjectId.isValid(id)) {
