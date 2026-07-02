@@ -39,6 +39,67 @@ export default function PasswordsPage() {
 		}
 	};
 
+	const handleExport = async () => {
+		try {
+			const res = await fetch('/api/passwords?export=json', {
+				credentials: 'include',
+			});
+
+			if (!res.ok) throw new Error('Export failed');
+
+			const blob = await res.blob();
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `passwords-export-${new Date().toISOString().slice(0,10)}.json`;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			window.URL.revokeObjectURL(url);
+		} catch (err) {
+			alert('An error occurred during export.');
+			console.error(err);
+		}
+	};
+
+	const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		if (!file.name.endsWith('.json')) {
+			alert('Please select only .json files.');
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = async (event) => {
+			try {
+				const jsonData = JSON.parse(event.target?.result as string);
+				
+				const res = await fetch('/api/passwords', {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(jsonData),
+					credentials: 'include',
+				});
+
+				if (res.ok) {
+					alert('Passwords imported successfully!');
+					fetchPasswords(); // Refresh the list
+				} else {
+					const errorData = await res.json().catch(() => ({}));
+					alert(`Error: ${errorData.error || 'Import failed.'}`);
+				}
+			} catch (err) {
+				alert('Invalid JSON file! Please select a correct export file.');
+				console.error(err);
+			}
+		};
+		reader.readAsText(file);
+
+		e.target.value = '';
+	};
+
 	const handleDelete = async (id: string) => {
 		await fetch(`/api/passwords/${id}`, {
 			method: 'DELETE',
@@ -79,7 +140,7 @@ export default function PasswordsPage() {
 
 			<main className="flex-1 ml-0 md:ml-64 p-8 md:p-12 space-y-10">
 
-				{/* HEADER (modern SaaS style) */}
+				{/* Header */}
 				<header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
 					<div className="space-y-2">
 						<h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900">
@@ -90,7 +151,7 @@ export default function PasswordsPage() {
 						</p>
 					</div>
 
-					<div className="flex items-center gap-3">
+					<div className="flex items-center gap-3 flex-wrap">
 						<input
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
@@ -98,14 +159,23 @@ export default function PasswordsPage() {
 							className="w-full md:w-72 px-4 py-2 rounded-xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10"
 						/>
 
+						{/* Import Button */}
+						<label className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm cursor-pointer transition flex items-center gap-2">
+							Import JSON
+							<input
+								type="file"
+								accept=".json"
+								onChange={handleImport}
+								className="hidden"
+							/>
+						</label>
+
+						{/* Export Button */}
 						<button
-							onClick={() => {
-								setEditingPassword(null);
-								setIsModalOpen(true);
-							}}
-							className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm hover:bg-slate-800 transition"
+							onClick={handleExport}
+							className="px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm transition flex items-center gap-2"
 						>
-							+ Add
+							Export JSON
 						</button>
 					</div>
 				</header>
