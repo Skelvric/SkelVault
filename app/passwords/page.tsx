@@ -45,19 +45,19 @@ export default function PasswordsPage() {
 				credentials: 'include',
 			});
 
-			if (!res.ok) throw new Error('Export failed');
+			if (!res.ok) throw new Error('Export failed!');
 
 			const blob = await res.blob();
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement('a');
 			a.href = url;
-			a.download = `passwords-export-${new Date().toISOString().slice(0,10)}.json`;
+			a.download = `passwords-export-${new Date().toISOString().slice(0, 10)}.json`;
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
 			window.URL.revokeObjectURL(url);
 		} catch (err) {
-			alert('An error occurred during export.');
+			alert('An error occurred during export!');
 			console.error(err);
 		}
 	};
@@ -67,17 +67,18 @@ export default function PasswordsPage() {
 		if (!file) return;
 
 		if (!file.name.endsWith('.json')) {
-			alert('Please select only .json files.');
+			alert('Please select only .json files!');
 			return;
 		}
 
 		const reader = new FileReader();
+
 		reader.onload = async (event) => {
 			try {
 				const jsonData = JSON.parse(event.target?.result as string);
-				
-				const res = await fetch('/api/passwords', {
-					method: 'PUT',
+
+				const res = await fetch('/api/passwords/import', {
+					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(jsonData),
 					credentials: 'include',
@@ -85,18 +86,18 @@ export default function PasswordsPage() {
 
 				if (res.ok) {
 					alert('Passwords imported successfully!');
-					fetchPasswords(); // Refresh the list
+					fetchPasswords();
 				} else {
 					const errorData = await res.json().catch(() => ({}));
-					alert(`Error: ${errorData.error || 'Import failed.'}`);
+					alert(`Error: ${errorData.error || 'Import failed!'}`);
 				}
 			} catch (err) {
-				alert('Invalid JSON file! Please select a correct export file.');
+				alert('Invalid JSON file! Please select a correct export file!');
 				console.error(err);
 			}
 		};
-		reader.readAsText(file);
 
+		reader.readAsText(file);
 		e.target.value = '';
 	};
 
@@ -140,7 +141,6 @@ export default function PasswordsPage() {
 
 			<main className="flex-1 ml-0 md:ml-64 p-8 md:p-12 space-y-10">
 
-				{/* Header */}
 				<header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
 					<div className="space-y-2">
 						<h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900">
@@ -159,7 +159,6 @@ export default function PasswordsPage() {
 							className="w-full md:w-72 px-4 py-2 rounded-xl border border-slate-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10"
 						/>
 
-						{/* Import Button */}
 						<label className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm cursor-pointer transition flex items-center gap-2">
 							Import JSON
 							<input
@@ -170,7 +169,6 @@ export default function PasswordsPage() {
 							/>
 						</label>
 
-						{/* Export Button */}
 						<button
 							onClick={handleExport}
 							className="px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm transition flex items-center gap-2"
@@ -180,7 +178,6 @@ export default function PasswordsPage() {
 					</div>
 				</header>
 
-				{/* Content */}
 				{filteredPasswords.length === 0 ? (
 					<div className="bg-white border border-slate-100 rounded-2xl p-12 text-center shadow-sm">
 						<h2 className="text-xl font-medium text-slate-900">
@@ -216,7 +213,6 @@ export default function PasswordsPage() {
 						))}
 					</div>
 				)}
-
 			</main>
 
 			<PasswordModal
