@@ -9,6 +9,9 @@ import {
   FileJson,
   ArrowRight,
   Terminal,
+  TerminalSquare,
+  Apple,
+  Monitor
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -147,6 +150,90 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+
+        {/* Section Divider */}
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center gap-3 my-10 sm:my-14"
+        >
+          <span className="text-xs font-mono-tight text-muted-foreground">
+            01
+          </span>
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs font-mono-tight text-muted-foreground">
+            Downloads
+          </span>
+        </motion.div>
+
+        {/* Downloads */}
+        <motion.div
+          variants={itemVariants}
+          className="mb-16 sm:mb-24"
+        >
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="px-5 sm:px-6 py-5 border-b border-border text-center">
+              <h2 className="font-medium">Download SkelVault</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Available for Windows! macOS, and Linux Coming Soon.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
+              <a
+                href="https://github.com/Skelvric/SkelVault-Desktop/releases/download/v0.1.0/SkelVault.Setup.0.1.0.exe"
+                className="p-5 sm:p-6 hover:bg-accent/40 transition-colors flex items-center gap-3"
+              >
+                <Monitor className="w-5 h-5" strokeWidth={1.75} />
+                <div>
+                  <div className="font-medium">Windows</div>
+                  <div className="text-xs text-muted-foreground">
+                    Download Installer
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="https://vault.skelvric.com/"
+                className="p-5 sm:p-6 hover:bg-accent/40 transition-colors flex items-center gap-3"
+              >
+                <Apple className="w-5 h-5" strokeWidth={1.75} />
+                <div>
+                  <div className="font-medium">macOS</div>
+                  <div className="text-xs text-muted-foreground">
+                    Coming Soon
+                  </div>
+                </div>
+              </a>
+
+              <a
+                href="https://vault.skelvric.com/"
+                className="p-5 sm:p-6 hover:bg-accent/40 transition-colors flex items-center gap-3"
+              >
+                <TerminalSquare className="w-5 h-5" strokeWidth={1.75} />
+                <div>
+                  <div className="font-medium">Linux</div>
+                  <div className="text-xs text-muted-foreground">
+                    Coming Soon
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Section Divider */}
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center gap-3 my-10 sm:my-14"
+        >
+          <span className="text-xs font-mono-tight text-muted-foreground">
+            02
+          </span>
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs font-mono-tight text-muted-foreground">
+            Features
+          </span>
+        </motion.div>
 
         {/* Features */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border rounded-2xl overflow-hidden border border-border mb-16 sm:mb-24">
